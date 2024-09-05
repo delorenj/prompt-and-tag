@@ -33,13 +33,13 @@ This process ensures that your AI conversations are always in sync with the corr
 
 1. Copy the Makefile into your project root.
 2. Run:
-   ```
+   ``` shell
    make setup
    ```
    This sets up a virtual environment and installs the necessary packages.
 
 3. When you're ready to consult an AI, run:
-   ```
+   ``` shell
    make prompt-and-tag
    ```
 
@@ -48,7 +48,7 @@ This process ensures that your AI conversations are always in sync with the corr
 1. **Develop**: Work on your project as usual.
 
 2. **Prepare for AI Consultation**: Before starting a conversation with an LLM, run:
-   ```
+   ``` shell
    make prompt-and-tag
    ```
 
@@ -71,6 +71,28 @@ This process ensures that your AI conversations are always in sync with the corr
 - Verify that you're in the correct directory when running commands.
 - If issues persist, please open an issue in the repository.
 
+## But wait, what do I do if my codebase is huuuuuge? 🤯
+
+If you're working with a large codebase, there are a ton of ways to work around this thanks to the robust code2prompt filters provided. You can build custom filters for `code2prompt` to limit the scope of the code snapshot and codify it as a `make` target.
+
+For conversations about deployment, IaC, and infrastructure, I might only want to include the following files:
+
+``` shell
+code2prompt --path . --filter "Dockerfile, *.yml, *.md, Makefile" --exclude "venv, node_modules, dist, build, tests"
+
+```
+
+I can then add this as a target in my Makefile
+
+``` Makefile
+prompt-and-tag-deployment:
+   # ... existing code
+    code2prompt --path . --filter "Dockerfile, *.yml, *.md, Makefile" --exclude "venv, node_modules, dist, build, tests" > prompt-and-tag-deployment.txt
+   # ... the rest of the make target
+
+```
+
+
 ## Contributing 🤝
 
 We welcome contributions! If you've found a bug or have an idea for an improvement, please:
@@ -85,8 +107,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## Acknowledgements 🙏
 
-This project utilizes [code2prompt](https://github.com/raphaelmansuy/code2prompt), a powerful tool developed by Microsoft for converting code to LLM-friendly prompts. I use it all the time and am grateful for their contribution to the AI-assisted development community.  Perhaps this tool can be extended to support the prompt and tag workflow. We shall see!
+This project utilizes [code2prompt](https://github.com/raphaelmansuy/code2prompt), a tool for converting code to LLM-friendly prompts. I use it all the time and am grateful for Raphael's contribution to the AI-assisted development community. Perhaps this tool can be extended to support the prompt and tag workflow. We shall see!
 
 ---
 
-Prompt-and-Tag aims to enhance your development process by bridging the gap between your codebase and AI assistants. We hope it proves to be a valuable addition to your workflow! 💻✨
+Prompt-and-Tag aims to enhance your development process by bridging the gap between your codebase and AI assistants. I hope it proves to be a valuable addition to your workflow! 💻✨
